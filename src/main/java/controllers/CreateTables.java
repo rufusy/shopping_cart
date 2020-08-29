@@ -1,10 +1,5 @@
 package controllers;
 
-import database.HibernateHelper;
-import models.UserGroup;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,14 +16,7 @@ public class CreateTables extends HttpServlet {
      */
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        HibernateHelper.getSessionFactory();
-//        Session session = HibernateHelper.getSessionFactory().getCurrentSession();
-//        Transaction tx = session.getTransaction();
-//        tx.begin();
-//        UserGroup userGroup = new UserGroup();
-//        userGroup.setName("Administrator");
-//        userGroup.setPermission("");
-//        session.save(userGroup);
-//        tx.commit();
+        //HibernateHelper.getSessionFactory();
+
     }
 }

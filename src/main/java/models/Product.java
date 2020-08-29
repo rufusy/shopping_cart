@@ -65,7 +65,7 @@ public class Product {
     @Column(nullable = false, columnDefinition = "DECIMAL(15,2) DEFAULT 0.00")
     private boolean price;
 
-    @Column(name="date_available", nullable = false, columnDefinition = "DATE DEFAULT 0000-00-00")
+    @Column(name="date_available", columnDefinition = "DATE")
     @Temporal(value = TemporalType.DATE)
     private java.util.Date dateAvailable;
 

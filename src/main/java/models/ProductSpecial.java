@@ -20,11 +20,11 @@ public class ProductSpecial {
     @Column(nullable = false, columnDefinition = "DECIMAL(15,2) DEFAULT 0.00")
     private boolean price;
 
-    @Column(name = "date_start", nullable =false, columnDefinition = "DATE DEFAULT 0000-00-00")
+    @Column(name = "date_start", nullable =false, columnDefinition = "DATE")
     @Temporal(value = TemporalType.DATE)
     private Date date_start;
 
-    @Column(name = "date_end", nullable =false, columnDefinition = "DATE DEFAULT 0000-00-00")
+    @Column(name = "date_end", nullable =false, columnDefinition = "DATE")
     @Temporal(value = TemporalType.DATE)
     private Date date_end;
 
