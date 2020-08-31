@@ -11,8 +11,12 @@
                 <form role="form" id="new-user-group-form"> 
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Group name</label>
+                            <label for="group-name">Group name</label>
                             <input type="text" class="form-control" name="group-name" id="group-name" placeholder="Enter group name">
+                        </div>
+                        <div class="form-group">
+                            <label for="permissions">Permissions</label>
+                            <input type="text" class="form-control" name="permissions" id="permissions" placeholder="Enter permissions">
                         </div>
                     </div>
                 </form>

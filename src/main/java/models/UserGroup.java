@@ -24,7 +24,8 @@ public class UserGroup {
     private String permission;
 
     @OneToMany(mappedBy="userGroup",
-    cascade={CascadeType.PERSIST, CascadeType.MERGE})
+    cascade={CascadeType.PERSIST, CascadeType.MERGE},
+    fetch = FetchType.LAZY)
     private List<User> users = new ArrayList<User>();
 
     public int getId() {

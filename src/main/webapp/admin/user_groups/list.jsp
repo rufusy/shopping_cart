@@ -142,24 +142,28 @@ to get the desired effect
   <script>
     $("#new-user-group-save").click(function(e){
       e.preventDefault();
-      toastr.success('New user group created.');
-      toastr.error('Error creating new user group.')
-
-      // let form = $('#new-user-group-form');
-      // $.ajax({
-      // 	type: 'POST',
-      // 	url: form.attrr('action'),
-      // 	data: form.serialize(),
-      // 	dataType: 'json',
-      // 	success: function(data){
-      // 		console.log('New user group created.')
-      // 		toastr.success('New user group created.');
-      // 	},
-      // 	error: function(data){
-      // 		console.log('Error creating user groups: '+ data);
-      // 		toastr.error('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
-      // 	}
-      // });
+      let form = $('#new-user-group-form');
+      $.ajax({
+      	type: 'POST',
+      	url: 'http://localhost:8080/shopping_cart/user_group/create',
+      	data: form.serialize(),
+      	dataType: 'json',
+      	success: function(data){
+          if(data){
+            form.trigger('reset'); 
+      		  console.log('New user group created.')
+            toastr.success('New user group created.');
+          }
+          else{
+            console.log('Error creating user groups: '+ data);
+            toastr.error('Error creating new user group.')
+          }
+      	},
+      	error: function(data){
+      		console.log('Error creating user groups: '+ data);
+          toastr.error('Error creating new user group.')
+      	}
+      });
     });
   </script>
 
