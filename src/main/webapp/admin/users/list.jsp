@@ -65,45 +65,19 @@ to get the desired effect
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
-                  <thead>
+                <table id="users-table" class="table table-bordered table-striped">
+                  <thead>  
                   <tr>
-                    <th>Rendering engine</th>
-                    <th>Browser</th>
-                    <th>Platform(s)</th>
-                    <th>Engine version</th>
-                    <th>CSS grade</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Telephone</th>
+                    <th>User Group</th>
+                    <th>Status</th>
+                    <th>Action</th>
                   </tr>
                   </thead>
-                  <tbody>
-                  <tr>
-                    <td>Trident</td>
-                    <td>Internet
-                      Explorer 4.0
-                    </td>
-                    <td>Win 95+</td>
-                    <td> 4</td>
-                    <td>X</td>
-                  </tr>
-                  <tr>
-                    <td>Trident</td>
-                    <td>Internet
-                      Explorer 5.0
-                    </td>
-                    <td>Win 95+</td>
-                    <td>5</td>
-                    <td>C</td>
-                  </tr>
+                  <tbody id='tBody'>
                   </tbody>
-                  <tfoot>
-                  <tr>
-                    <th>Rendering engine</th>
-                    <th>Browser</th>
-                    <th>Platform(s)</th>
-                    <th>Engine version</th>
-                    <th>CSS grade</th>
-                  </tr>
-                  </tfoot>
                 </table>
               </div>
               <!-- /.card-body -->
@@ -142,6 +116,7 @@ to get the desired effect
   <script>
     let $groups;
     $(function() {
+        // Fetch all user groups
         $.ajax({
             type: 'GET',
             url: 'http://localhost:8080/shopping_cart/users/create',
@@ -156,6 +131,36 @@ to get the desired effect
                 toastr.error('Error. Couldn\'t fetch user groups.')
             }
         });
+
+        // Fetch all users
+        $.ajax({  
+            type: "GET",  
+            url: "http://localhost:8080/shopping_cart/users/list",  
+            dataType: "json",  
+            contentType: "application/json",  
+            success: function(response) {  
+              console.log(response);
+                // response.forEach(element => {
+                //     let tr = "<tr>";  
+                //     tr += "<td>" + element.name + "</td>";  
+                //     tr += "<td>" + element.permission + "</td>" + "</tr>";  
+                //     $("#tBody").append(tr);  
+                // });
+                $("#users-table").DataTable({
+                      "paging": true,
+                      "lengthChange": true,
+                      "searching": true,
+                      "ordering": true,
+                      "info": true,
+                      "autoWidth": true,
+                      "responsive": true,
+                });  
+            },  
+            error: function(data){
+      		    console.log('Error fetching user goups: '+ data);
+                toastr.error('Error fetching user goups.')
+      	    }
+        });  
     });
 
 

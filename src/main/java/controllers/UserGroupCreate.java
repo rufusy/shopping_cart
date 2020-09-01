@@ -30,7 +30,7 @@ public class UserGroupCreate extends HttpServlet {
         tx.commit();
         if(userGroup != null)
             groupSaved = true;
-        session.close();
+        //session.close();
 
         // create `ObjectMapper` instance
         ObjectMapper mapper = new ObjectMapper();

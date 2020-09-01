@@ -23,7 +23,7 @@ public class HibernateHelper {
         properties.setProperty(Environment.PASS, "password1234");
         properties.setProperty(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
         properties.setProperty(Environment.SHOW_SQL, "true");
-        properties.setProperty(Environment.HBM2DDL_AUTO, "create");
+        //properties.setProperty(Environment.HBM2DDL_AUTO, "create");
         properties.setProperty(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
 
         configuration.setProperties(properties);

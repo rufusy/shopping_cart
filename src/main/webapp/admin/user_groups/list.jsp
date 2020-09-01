@@ -68,8 +68,6 @@ to get the desired effect
                 <table id="user-groups-table" class="table table-bordered table-striped">
                   <thead>
                   <tr>
-                    <th>No</th>
-                    <th>Id</th>
                     <th>Name</th>
                     <th>Permissions</th>
                   </tr>
@@ -114,85 +112,6 @@ to get the desired effect
 
   <script>
 
-    // $(document).ready(function(){
-    //     var leaguesTable = $('#leagues-table').DataTable({
-    //         processing: true,
-    //         serverSide: true,
-    //         ajax: '',
-    //         columns: [
-    //             {
-    //                 data:'id', 
-    //                 name:'id', 
-    //                 'visible':false
-    //             },
-    //             {
-    //                 data:'DT_RowIndex', 
-    //                 name: 'DT_RowIndex', 
-    //                 orderable: false,
-    //                 searchable: false
-    //             },
-    //             {
-    //                 data:'name',
-    //                 name:'name'
-    //             },
-    //             {
-    //                 data:'country',
-    //                 name:'country'
-    //             },
-    //             {
-    //                 data:'action',
-    //                 name:'action',
-    //                 orderable: false,
-    //                 searchable: false
-    //             } 
-    //         ],
-    //     order: [[0, 'desc']]
-    // }); 
-
-    // $(function() {
-
-    //     $.ajax({
-    //         type: 'GET',
-    //         url: 'http://localhost:8080/shopping_cart/user_groups/list',
-    //         dataType:'json',
-    //         success: function(data){
-    //             groups = data;
-    //             groups.forEach(group => {
-    //                 $('#user-group').append($('<option></option>').attr('value', group.id).html(group.name));
-    //             });
-    //         },
-    //         error: function(data){
-    //             toastr.error('Error. Couldn\'t fetch user groups.')
-    //         }
-    //     });
-
-    //     let table = $('#user-groups-table').DataTable({
-    //         ajax: 'http://localhost:8080/shopping_cart/user_groups/list',
-    //         columns: [
-    //             {
-    //                 data:'DT_RowIndex', 
-    //                 name: 'DT_RowIndex', 
-    //                 orderable: false,
-    //                 searchable: false
-    //             },
-    //             {
-    //                 data:'id', 
-    //                 name:'id', 
-    //                 'visible':false
-    //             },
-    //             {
-    //                 data:'name', 
-    //                 name:'name', 
-    //             },
-    //             {
-    //                 data:'permission', 
-    //                 name:'permission', 
-    //             }
-    //         ],
-    //         order: [[o, 'desc']]
-    //     });
-    // });
-
     $(document).ready(function() {  
         $.ajax({  
             type: "GET",  
@@ -202,13 +121,19 @@ to get the desired effect
             success: function(response) {  
                 response.forEach(element => {
                     let tr = "<tr>";  
-                    tr += "<td>" + element.id+ "</td>";  
-                    tr += "<td>" + element.id + "</td>";  
                     tr += "<td>" + element.name + "</td>";  
                     tr += "<td>" + element.permission + "</td>" + "</tr>";  
                     $("#tBody").append(tr);  
                 });
-                $("#user-groups-table").DataTable();  
+                $("#user-groups-table").DataTable({
+                      "paging": true,
+                      "lengthChange": true,
+                      "searching": true,
+                      "ordering": true,
+                      "info": true,
+                      "autoWidth": true,
+                      "responsive": true,
+                });  
             },  
             error: function(data){
       		    console.log('Error fetching user goups: '+ data);
@@ -216,7 +141,6 @@ to get the desired effect
       	    }
         });  
     });
-
 
     $("#new-user-group-save").click(function(e){
       e.preventDefault();

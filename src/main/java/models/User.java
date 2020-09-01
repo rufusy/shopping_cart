@@ -18,7 +18,7 @@ public class User {
     @Column(columnDefinition = "VARCHAR(255)")
     private String image;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name="user_group_id", nullable = false, referencedColumnName = "user_group_id")
     private UserGroup userGroup;
 

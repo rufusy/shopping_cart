@@ -31,7 +31,8 @@ public class UserCreate extends HttpServlet {
         String password = "secret"; //TODO generate random password
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
-        Session session = HibernateHelper.getSessionFactory().openSession();
+//        Session session = HibernateHelper.getSessionFactory().openSession();
+        Session session = HibernateHelper.getSessionFactory().getCurrentSession();
         UserGroup userGroup = (UserGroup) session.createQuery("FROM UserGroup UG WHERE UG.id = :user_group_id")
                 .setParameter("user_group_id",Integer.parseInt(group))
                 .getSingleResult();
@@ -46,21 +47,13 @@ public class UserCreate extends HttpServlet {
         user.getPerson().setTelephone(telephone);
         user.getPerson().setPassword(hashedPassword);
         user.getPerson().setDateAdded(new Date());
+        user.getPerson().setStatus(true);
         user.setUserGroup(userGroup);
         session.save(user);
         tx.commit();
         if(user != null)
             groupSaved = true;
-        session.close();
-
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        try {
-//            String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(this.userGroup);
-//            response.getWriter().println(json);
-//        } catch(Exception e) {
-//            e.printStackTrace();
-//        }
-
+        //session.close();
 
         // create `ObjectMapper` instance
         ObjectMapper mapper = new ObjectMapper();
@@ -83,8 +76,11 @@ public class UserCreate extends HttpServlet {
      * @throws IOException
      */
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Session session = HibernateHelper.getSessionFactory().openSession();
+//        Session session = HibernateHelper.getSessionFactory().openSession();
+        Session session = HibernateHelper.getSessionFactory().getCurrentSession();
+
         List<UserGroup> userGroups= session.createQuery("FROM UserGroup s").getResultList();
+        //session.close();
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(userGroups);
