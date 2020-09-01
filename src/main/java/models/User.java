@@ -18,9 +18,8 @@ public class User {
     @Column(columnDefinition = "VARCHAR(255)")
     private String image;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_group_id", referencedColumnName = "user_group_id", nullable=false)
+    @JoinColumn(name="user_group_id", nullable = false, referencedColumnName = "user_group_id")
     private UserGroup userGroup;
 
     public int getId() {

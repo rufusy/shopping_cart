@@ -18,7 +18,7 @@ public class CreateTables extends HttpServlet {
      */
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        //HibernateHelper.getSessionFactory();
+        HibernateHelper.getSessionFactory();
 
     }
 }

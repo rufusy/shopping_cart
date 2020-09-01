@@ -65,45 +65,18 @@ to get the desired effect
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="user-groups-table" class="table table-bordered table-striped">
                   <thead>
                   <tr>
-                    <th>Rendering engine</th>
-                    <th>Browser</th>
-                    <th>Platform(s)</th>
-                    <th>Engine version</th>
-                    <th>CSS grade</th>
+                    <th>No</th>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Permissions</th>
                   </tr>
                   </thead>
-                  <tbody>
-                  <tr>
-                    <td>Trident</td>
-                    <td>Internet
-                      Explorer 4.0
-                    </td>
-                    <td>Win 95+</td>
-                    <td> 4</td>
-                    <td>X</td>
-                  </tr>
-                  <tr>
-                    <td>Trident</td>
-                    <td>Internet
-                      Explorer 5.0
-                    </td>
-                    <td>Win 95+</td>
-                    <td>5</td>
-                    <td>C</td>
-                  </tr>
+                  <tbody id="tBody">
+                    <!--- Append table -->
                   </tbody>
-                  <tfoot>
-                  <tr>
-                    <th>Rendering engine</th>
-                    <th>Browser</th>
-                    <th>Platform(s)</th>
-                    <th>Engine version</th>
-                    <th>CSS grade</th>
-                  </tr>
-                  </tfoot>
                 </table>
               </div>
               <!-- /.card-body -->
@@ -140,6 +113,111 @@ to get the desired effect
   <jsp:include page="../includes/scripts.jsp" />  
 
   <script>
+
+    // $(document).ready(function(){
+    //     var leaguesTable = $('#leagues-table').DataTable({
+    //         processing: true,
+    //         serverSide: true,
+    //         ajax: '',
+    //         columns: [
+    //             {
+    //                 data:'id', 
+    //                 name:'id', 
+    //                 'visible':false
+    //             },
+    //             {
+    //                 data:'DT_RowIndex', 
+    //                 name: 'DT_RowIndex', 
+    //                 orderable: false,
+    //                 searchable: false
+    //             },
+    //             {
+    //                 data:'name',
+    //                 name:'name'
+    //             },
+    //             {
+    //                 data:'country',
+    //                 name:'country'
+    //             },
+    //             {
+    //                 data:'action',
+    //                 name:'action',
+    //                 orderable: false,
+    //                 searchable: false
+    //             } 
+    //         ],
+    //     order: [[0, 'desc']]
+    // }); 
+
+    // $(function() {
+
+    //     $.ajax({
+    //         type: 'GET',
+    //         url: 'http://localhost:8080/shopping_cart/user_groups/list',
+    //         dataType:'json',
+    //         success: function(data){
+    //             groups = data;
+    //             groups.forEach(group => {
+    //                 $('#user-group').append($('<option></option>').attr('value', group.id).html(group.name));
+    //             });
+    //         },
+    //         error: function(data){
+    //             toastr.error('Error. Couldn\'t fetch user groups.')
+    //         }
+    //     });
+
+    //     let table = $('#user-groups-table').DataTable({
+    //         ajax: 'http://localhost:8080/shopping_cart/user_groups/list',
+    //         columns: [
+    //             {
+    //                 data:'DT_RowIndex', 
+    //                 name: 'DT_RowIndex', 
+    //                 orderable: false,
+    //                 searchable: false
+    //             },
+    //             {
+    //                 data:'id', 
+    //                 name:'id', 
+    //                 'visible':false
+    //             },
+    //             {
+    //                 data:'name', 
+    //                 name:'name', 
+    //             },
+    //             {
+    //                 data:'permission', 
+    //                 name:'permission', 
+    //             }
+    //         ],
+    //         order: [[o, 'desc']]
+    //     });
+    // });
+
+    $(document).ready(function() {  
+        $.ajax({  
+            type: "GET",  
+            url: "http://localhost:8080/shopping_cart/users/create",  
+            dataType: "json",  
+            contentType: "application/json",  
+            success: function(response) {  
+                response.forEach(element => {
+                    let tr = "<tr>";  
+                    tr += "<td>" + element.id+ "</td>";  
+                    tr += "<td>" + element.id + "</td>";  
+                    tr += "<td>" + element.name + "</td>";  
+                    tr += "<td>" + element.permission + "</td>" + "</tr>";  
+                    $("#tBody").append(tr);  
+                });
+                $("#user-groups-table").DataTable();  
+            },  
+            error: function(data){
+      		    console.log('Error fetching user goups: '+ data);
+                toastr.error('Error fetching user goups.')
+      	    }
+        });  
+    });
+
+
     $("#new-user-group-save").click(function(e){
       e.preventDefault();
       let form = $('#new-user-group-form');

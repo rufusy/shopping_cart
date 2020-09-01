@@ -1,9 +1,6 @@
 package models;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -92,4 +89,5 @@ public class Person {
     public void setDateAdded(Date dateAdded) {
         this.dateAdded = dateAdded;
     }
+
 }

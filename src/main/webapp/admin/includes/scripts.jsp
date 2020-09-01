@@ -13,19 +13,19 @@
 <script src="http://localhost:8080/shopping_cart/admin/dist/js/adminlte.js"></script>
 <!-- page script -->
 <script>
-    $(function () {
-      $("#example1").DataTable({
-        "responsive": true,
-        "autoWidth": false,
-      });
-      $('#example2').DataTable({
-        "paging": true,
-        "lengthChange": false,
-        "searching": false,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-        "responsive": true,
-      });
-    });
+    // $(function () {
+    //   $("#example1").DataTable({
+    //     "responsive": true,
+    //     "autoWidth": false,
+    //   });
+    //   $('#example2').DataTable({
+    //     "paging": true,
+    //     "lengthChange": false,
+    //     "searching": false,
+    //     "ordering": true,
+    //     "info": true,
+    //     "autoWidth": false,
+    //     "responsive": true,
+    //   });
+    // });
   </script>

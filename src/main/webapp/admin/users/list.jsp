@@ -178,12 +178,13 @@ to get the desired effect
         if($('#user-group').val()=='') $('#user-group').addClass('is-invalid');
         else $('#user-group').addClass('is-valid');
      
-        if($('#user-group').val()=='' || $('#last-name').val()=='' 
-            || $('#email').val()=='' || $('#telephone').val()=='' 
+        if($('#user-group').val()=='' || $('#last-name').val()==''
+            || $('#email').val()=='' || $('#telephone').val()==''
             || $('#user-group').val()==''
         ){
 
         }
+
         else{
             $.ajax({
             type: 'POST',
