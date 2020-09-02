@@ -119,7 +119,7 @@ to get the desired effect
         // Fetch all user groups
         $.ajax({
             type: 'GET',
-            url: 'http://localhost:8080/shopping_cart/user_groups/list',
+            url: 'http://localhost:8080/shopping_cart/groups_list',
             dataType:'json',
             success: function(data){
                 groups = data;
@@ -135,7 +135,7 @@ to get the desired effect
         // Fetch all users
         $.ajax({  
             type: "GET",  
-            url: "http://localhost:8080/shopping_cart/users/list",  
+            url: "http://localhost:8080/shopping_cart/users_list",  
             dataType: "json",  
             contentType: "application/json",  
             success: function(response) {  
@@ -193,7 +193,7 @@ to get the desired effect
         else{
             $.ajax({
             type: 'POST',
-            url: 'http://localhost:8080/shopping_cart/user/create',
+            url: 'http://localhost:8080/shopping_cart/user_create',
             data: form.serialize(),
             dataType: 'json',
             success: function(data){

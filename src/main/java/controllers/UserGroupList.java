@@ -18,24 +18,24 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-@WebServlet(urlPatterns = {"/user_groups/list"})
+@WebServlet(urlPatterns = {"/groups_list"})
 public class UserGroupList extends HttpServlet {
     /**
-     * Get all user groups available
+     * Get all users groups available
      * @param request
      * @param response
      * @throws IOException
      */
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Session session = HibernateHelper.getSessionFactory().openSession();
-        List<UserGroup> userGroups= session.createQuery("FROM UserGroup s").getResultList();
-        session.close();
+        List<UserGroup> userGroups= session.createQuery("FROM UserGroup UG").getResultList();
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(userGroups);
             response.getWriter().println(json);
         } catch(Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            response.getWriter().println(e.getMessage());
         }
     }
 }

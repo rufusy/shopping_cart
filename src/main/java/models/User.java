@@ -1,5 +1,7 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -20,6 +22,7 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name="user_group_id", nullable = false, referencedColumnName = "user_group_id")
+    @JsonBackReference
     private UserGroup userGroup;
 
     public int getId() {

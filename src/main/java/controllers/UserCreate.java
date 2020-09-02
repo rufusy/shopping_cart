@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.Date;
 
 
-@WebServlet(urlPatterns = {"/user/create"})
+@WebServlet(urlPatterns = {"/user_create"})
 public class UserCreate extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String firstName = request.getParameter("first-name");
@@ -30,9 +30,10 @@ public class UserCreate extends HttpServlet {
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
         Session session = HibernateHelper.getSessionFactory().openSession();
-        UserGroup userGroup = (UserGroup) session.createQuery("FROM UserGroup UG WHERE UG.id = :user_group_id")
-                .setParameter("user_group_id",Integer.parseInt(group))
-                .getSingleResult();
+//        UserGroup userGroup = (UserGroup) session.createQuery("FROM UserGroup UG WHERE UG.id = :user_group_id")
+//                .setParameter("user_group_id",Integer.parseInt(group))
+//                .getSingleResult();
+        UserGroup userGroup = session.load(UserGroup.class, Integer.parseInt(group));
 
         Transaction tx = session.getTransaction();
         tx.begin();
@@ -48,7 +49,6 @@ public class UserCreate extends HttpServlet {
         user.setUserGroup(userGroup);
         session.save(user);
         tx.commit();
-        session.close();
 
         // create `ObjectMapper` instance
         ObjectMapper mapper = new ObjectMapper();

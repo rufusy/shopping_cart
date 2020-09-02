@@ -115,7 +115,7 @@ to get the desired effect
     $(document).ready(function() {  
         $.ajax({  
             type: "GET",  
-            url: "http://localhost:8080/shopping_cart/user_groups/list",  
+            url: "http://localhost:8080/shopping_cart/groups_list",  
             dataType: "json",  
             contentType: "application/json",  
             success: function(response) {  
@@ -147,7 +147,7 @@ to get the desired effect
       let form = $('#new-user-group-form');
       $.ajax({
       	type: 'POST',
-      	url: 'http://localhost:8080/shopping_cart/user_group/create',
+      	url: 'http://localhost:8080/shopping_cart/group_create',
       	data: form.serialize(),
       	dataType: 'json',
       	success: function(data){

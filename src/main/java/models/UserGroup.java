@@ -1,5 +1,7 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ public class UserGroup {
     @OneToMany(mappedBy="userGroup",
     cascade={CascadeType.PERSIST, CascadeType.MERGE},
     fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<User> users = new ArrayList<User>();
 
     public int getId() {

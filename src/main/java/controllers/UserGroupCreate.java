@@ -11,9 +11,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;git add
+import java.io.IOException;
 
-@WebServlet(urlPatterns = {"/user_group/create"})
+@WebServlet(urlPatterns = {"/group_create"})
 public class UserGroupCreate extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String groupName = request.getParameter("group-name");
@@ -27,7 +27,6 @@ public class UserGroupCreate extends HttpServlet {
         userGroup.setPermission(permissions);
         session.save(userGroup);
         tx.commit();
-        session.close();
 
         // create `ObjectMapper` instance
         ObjectMapper mapper = new ObjectMapper();
