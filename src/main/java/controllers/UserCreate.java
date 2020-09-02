@@ -10,19 +10,17 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mindrot.jbcrypt.BCrypt;
 
-import javax.persistence.Query;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
-@WebServlet(urlPatterns = {"/users/create"})
+
+@WebServlet(urlPatterns = {"/user/create"})
 public class UserCreate extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        boolean groupSaved = false;
         String firstName = request.getParameter("first-name");
         String lastName = request.getParameter("last-name");
         String email = request.getParameter("email");
@@ -31,8 +29,7 @@ public class UserCreate extends HttpServlet {
         String password = "secret"; //TODO generate random password
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
-//        Session session = HibernateHelper.getSessionFactory().openSession();
-        Session session = HibernateHelper.getSessionFactory().getCurrentSession();
+        Session session = HibernateHelper.getSessionFactory().openSession();
         UserGroup userGroup = (UserGroup) session.createQuery("FROM UserGroup UG WHERE UG.id = :user_group_id")
                 .setParameter("user_group_id",Integer.parseInt(group))
                 .getSingleResult();
@@ -51,42 +48,15 @@ public class UserCreate extends HttpServlet {
         user.setUserGroup(userGroup);
         session.save(user);
         tx.commit();
-        if(user != null)
-            groupSaved = true;
-        //session.close();
+        session.close();
 
         // create `ObjectMapper` instance
         ObjectMapper mapper = new ObjectMapper();
         // create a JSON object
         ObjectNode json = mapper.createObjectNode();
-
-        if(groupSaved)
-            json.put("saved", true);
-        else
-            json.put("saved", false);
-
+        json.put("saved", true);
         String data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
         response.getWriter().println(data);
     }
 
-    /**
-     * Get all user groups available
-     * @param request
-     * @param response
-     * @throws IOException
-     */
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        Session session = HibernateHelper.getSessionFactory().openSession();
-        Session session = HibernateHelper.getSessionFactory().getCurrentSession();
-
-        List<UserGroup> userGroups= session.createQuery("FROM UserGroup s").getResultList();
-        //session.close();
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(userGroups);
-            response.getWriter().println(json);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

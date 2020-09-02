@@ -11,12 +11,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.io.IOException;git add
 
 @WebServlet(urlPatterns = {"/user_group/create"})
 public class UserGroupCreate extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        boolean groupSaved = false;
         String groupName = request.getParameter("group-name");
         String permissions = request.getParameter("permissions");
 
@@ -28,20 +27,13 @@ public class UserGroupCreate extends HttpServlet {
         userGroup.setPermission(permissions);
         session.save(userGroup);
         tx.commit();
-        if(userGroup != null)
-            groupSaved = true;
-        //session.close();
+        session.close();
 
         // create `ObjectMapper` instance
         ObjectMapper mapper = new ObjectMapper();
         // create a JSON object
         ObjectNode json = mapper.createObjectNode();
-
-        if(groupSaved)
-            json.put("saved", true);
-        else
-            json.put("saved", false);
-
+        json.put("saved", true);
         String data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
         response.getWriter().println(data);
     }

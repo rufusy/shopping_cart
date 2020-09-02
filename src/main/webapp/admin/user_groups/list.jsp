@@ -111,11 +111,11 @@ to get the desired effect
   <jsp:include page="../includes/scripts.jsp" />  
 
   <script>
-
+    //Fetch all groups
     $(document).ready(function() {  
         $.ajax({  
             type: "GET",  
-            url: "http://localhost:8080/shopping_cart/users/create",  
+            url: "http://localhost:8080/shopping_cart/user_groups/list",  
             dataType: "json",  
             contentType: "application/json",  
             success: function(response) {  
@@ -141,7 +141,7 @@ to get the desired effect
       	    }
         });  
     });
-
+    // Create group
     $("#new-user-group-save").click(function(e){
       e.preventDefault();
       let form = $('#new-user-group-form');

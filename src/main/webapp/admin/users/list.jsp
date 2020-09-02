@@ -119,7 +119,7 @@ to get the desired effect
         // Fetch all user groups
         $.ajax({
             type: 'GET',
-            url: 'http://localhost:8080/shopping_cart/users/create',
+            url: 'http://localhost:8080/shopping_cart/user_groups/list',
             dataType:'json',
             success: function(data){
                 groups = data;
@@ -163,7 +163,7 @@ to get the desired effect
         });  
     });
 
-
+    // Create new user
     $("#new-user-save").click(function(e){
         e.preventDefault();      
         let form = $('#new-user-form');
@@ -193,7 +193,7 @@ to get the desired effect
         else{
             $.ajax({
             type: 'POST',
-            url: 'http://localhost:8080/shopping_cart/users/create',
+            url: 'http://localhost:8080/shopping_cart/user/create',
             data: form.serialize(),
             dataType: 'json',
             success: function(data){
