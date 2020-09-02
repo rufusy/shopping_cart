@@ -1,5 +1,8 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -37,14 +40,17 @@ public class Category {
     @Embedded
     private Common common;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
+    @JsonBackReference
     @JoinColumn(name="parent_id", referencedColumnName = "category_id")
     private Category parentCategory;
 
     @OneToMany(mappedBy="parentCategory", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JsonManagedReference
     private List<Category> childCategories = new ArrayList<Category>();
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "categories", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JsonManagedReference
     private List<Product> products = new ArrayList<Product>();
 
     public int getId() {

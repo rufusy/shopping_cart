@@ -17,7 +17,7 @@ public class Common {
 
     @Column(name = "date_modified", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     @Temporal(value = TemporalType.TIMESTAMP)
-    private java.util.Date date_modified;
+    private java.util.Date dateModified;
 
     public boolean isStatus() {
         return status;
@@ -35,11 +35,11 @@ public class Common {
         this.dateAdded = dateAdded;
     }
 
-    public Date getDate_modified() {
-        return date_modified;
+    public Date getDateModified() {
+        return dateModified;
     }
 
-    public void setDate_modified(Date date_modified) {
-        this.date_modified = date_modified;
+    public void setDateModified(Date dateModified) {
+        this.dateModified = dateModified;
     }
 }

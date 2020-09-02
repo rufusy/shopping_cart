@@ -140,12 +140,17 @@ to get the desired effect
             contentType: "application/json",  
             success: function(response) {  
               console.log(response);
-                // response.forEach(element => {
-                //     let tr = "<tr>";  
-                //     tr += "<td>" + element.name + "</td>";  
-                //     tr += "<td>" + element.permission + "</td>" + "</tr>";  
-                //     $("#tBody").append(tr);  
-                // });
+                response.forEach(user => {
+                    let tr = "<tr>";  
+                    tr += "<td>" +user.person.firstName+' '+user.person.lastName+"</td>";  
+                    tr += "<td>" +user.person.email+ "</td>" + "</tr>";
+                    tr += "<td>" +user.person.telephone+"</td>";  
+                    tr += "<td>" + 'Admin' +"</td>";  
+                    tr += "<td>" +user.person.status+"</td>";  
+                    tr += "<td>" +' Action '+"</td>";  
+
+                    $("#tBody").append(tr);  
+                });
                 $("#users-table").DataTable({
                       "paging": true,
                       "lengthChange": true,
