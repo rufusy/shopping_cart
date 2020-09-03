@@ -141,15 +141,16 @@ to get the desired effect
             success: function(response) {  
               console.log(response);
                 response.forEach(user => {
+                    let status = 'Inactive';
+                    if(user.person.status) status = 'Active';
                     let tr = "<tr>";  
                     tr += "<td>" +user.person.firstName+' '+user.person.lastName+"</td>";  
-                    tr += "<td>" +user.person.email+ "</td>" + "</tr>";
+                    tr += "<td>" +user.person.email+ "</td>";
                     tr += "<td>" +user.person.telephone+"</td>";  
                     tr += "<td>" + 'Admin' +"</td>";  
-                    tr += "<td>" +user.person.status+"</td>";  
-                    tr += "<td>" +' Action '+"</td>";  
-
-                    $("#tBody").append(tr);  
+                    tr += "<td>" +status+"</td>";  
+                    tr += "<td>" + '<a href="javascript:void(0)" class="nav-link" onClick="editUser($(this));" data-id="' +user.id + '">Edit</a> |' +'<a href="javascript:void(0)" class="nav-link"  onClick="deleteUser($(this));" data-id="' +user.id + '">Delete</a>' + "</td>" + "</tr>";
+                    $("#tBody").append(tr);
                 });
                 $("#users-table").DataTable({
                       "paging": true,
@@ -168,6 +169,17 @@ to get the desired effect
         });  
     });
 
+            // Delete user
+            let deleteUser = function (obj) {
+                let id = obj.attr('data-id');
+                alert('Delete user: '+id);
+            }
+
+            // user details
+            let editUser = function (obj) {
+                let id = obj.attr('data-id');
+                alert('Details user: '+id);
+            }
     // Create new user
     $("#new-user-save").click(function(e){
         e.preventDefault();      

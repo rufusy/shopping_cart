@@ -40,7 +40,7 @@ public class Category {
     @Embedded
     private Common common;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonBackReference
     @JoinColumn(name="parent_id", referencedColumnName = "category_id")
     private Category parentCategory;

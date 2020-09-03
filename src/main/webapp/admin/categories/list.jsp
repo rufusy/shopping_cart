@@ -117,9 +117,8 @@ to get the desired effect
     <jsp:include page="../includes/scripts.jsp" />
 
     <script>
-        let categories;
-        let action;
         $(function () {
+            let categories = [];
             // Fetch all categories
             $.ajax({
                 type: 'GET',
@@ -131,6 +130,25 @@ to get the desired effect
                         $('#parent-category').append($('<option></option>').attr('value',
                                 category.id)
                             .attr('data-name', category.name).html(category.name));
+
+                        let tr = "<tr>";
+                        tr += "<td>" + category.name + "</td>";
+                        tr += "<td>" + category.description + "</td>";
+                        tr += "<td>" + category.metaTitle + "</td>";
+                        tr += "<td>" + category.metaKeyword + "</td>";
+                        tr += "<td>" + category.metaDescription + "</td>";
+                        tr += "<td>" + 'parent' + "</td>";
+                        tr += "<td>" + '<div> <a href="javascript:void(0)" class="nav-link" onClick="editCategory($(this));" data-id="'+category.id+'">Edit</a> ' +'<a href="javascript:void(0)" class="nav-link"  onClick="deleteCategory($(this));" data-id="' +category.id + '">Delete</a> </div>' + "</td>" + "</tr>";
+                        $("#tBody").append(tr);
+                    });
+                    $("#categories-table").DataTable({
+                        "paging": true,
+                        "lengthChange": true,
+                        "searching": true,
+                        "ordering": true,
+                        "info": true,
+                        "autoWidth": true,
+                        "responsive": true,
                     });
                 },
                 error: function (data) {
@@ -138,79 +156,63 @@ to get the desired effect
                 }
             });
 
-            // Populate categories table
-            if (categories !== undefined || categories.length > 0) {
-                categories.forEach(category => {
-                    let tr = "<tr>";
-                    tr += "<td>" + category.name + "</td>";
-                    tr += "<td>" + category.description + "</td>" + "</tr>";
-                    tr += "<td>" + category.metaTitle + "</td>" + "</tr>";
-                    tr += "<td>" + category.metaKeyword + "</td>" + "</tr>";
-                    tr += "<td>" + category.metaDescription + "</td>" + "</tr>";
-                    tr += "<td>" + 'parent' + "</td>" + "</tr>";
-                    tr += "<td>" +
-                        '<a href="javascript:void(0)" class="nav-link" onClick="editCategory(this);" data-id="' +
-                        category.id + '">Edit</a> |' +
-                        '<a href="javascript:void(0)" class="nav-link"  onClick="deleteCategory(this);" data-id="' +
-                        category.id + '">Delete</a>' + "</td>" + "</tr>";
-                    $("#tBody").append(tr);
-                });
-                $("#categories-table").DataTable({
-                    "paging": true,
-                    "lengthChange": true,
-                    "searching": true,
-                    "ordering": true,
-                    "info": true,
-                    "autoWidth": true,
-                    "responsive": true,
-                });
-            }
-
             // Delete category
-            let deleteCategory = function (obj) {
-                let id = this.attr('data-id');
-                $.ajax({
-                    type: 'POST',
-                    url: 'http://localhost:8080/shopping_cart/category_delete',
-                    data: {
-                        'id': id
-                    },
-                    dataType: 'json',
-                    success: function (data) {
-                        data == true ? toastr.success('Category deleted.') : toastr.error(
-                            'Category failed to delete');
-                    },
-                    error: function (data) {
-                        console.log('Error: ' + data);
-                        toastr.error('Error: Category failed to delete');
-                    }
-                });
+        	let deleteCategory = function (obj) {
+                let id = obj.attr('data-id');
+                alert('Delete category: '+id);
             }
 
-            // Categoriy details
+            // category details
             let editCategory = function (obj) {
                 let id = obj.attr('data-id');
-                $('#cat-id').val(id);
-                $('#category-form').trigger('reset');
-                $('#update-category-modal').modal('show');
-                $.ajax({
-                    type: 'GET',
-                    url: 'http://localhost:8080/shopping_cart/category_show?id=' + id,
-                    dataType: 'json',
-                    success: function (data) {
-                        $('#category-form').attr('action', 'category_edit');
-                        $('#name').val(data.name);
-                        $('#description').val(data.description);
-                        $('#metatitle').val(data.metaTitle);
-                        $('#metakeyword').val(data.metaKeyword);
-                        $('#metadescription').val(data.metaDescription);
-                    },
-                    error: function (data) {
-                        console.log('Error: ' + data);
-                        toastr.error('Error: Category failed to delete');
-                    }
-                });
+                alert('Details category: '+id);
             }
+
+            // // Delete category
+            // let deleteCategory = function (obj) {
+            //     let id = obj.attr('data-id');
+            //     $.ajax({
+            //         type: 'POST',
+            //         url: 'http://localhost:8080/shopping_cart/category_delete',
+            //         data: {
+            //             'id': id
+            //         },
+            //         dataType: 'json',
+            //         success: function (data) {
+            //             data == true ? toastr.success('Category deleted.') : toastr.error(
+            //                 'Category failed to delete');
+            //         },
+            //         error: function (data) {
+            //             console.log('Error: ' + data);
+            //             toastr.error('Error: Category failed to delete');
+            //         }
+            //     });
+            // }
+
+            // // Categoriy details
+            // let editCategory = function (obj) {
+            //     let id = obj.attr('data-id');
+            //     $('#cat-id').val(id);
+            //     $('#category-form').trigger('reset');
+            //     $('#update-category-modal').modal('show');
+            //     $.ajax({
+            //         type: 'GET',
+            //         url: 'http://localhost:8080/shopping_cart/category_show?id=' + id,
+            //         dataType: 'json',
+            //         success: function (data) {
+            //             $('#category-form').attr('action', 'category_edit');
+            //             $('#name').val(data.name);
+            //             $('#description').val(data.description);
+            //             $('#metatitle').val(data.metaTitle);
+            //             $('#metakeyword').val(data.metaKeyword);
+            //             $('#metadescription').val(data.metaDescription);
+            //         },
+            //         error: function (data) {
+            //             console.log('Error: ' + data);
+            //             toastr.error('Error: Category failed to delete');
+            //         }
+            //     });
+            // }
 
             // Create new category
             $("#new-category-save").click(function (e) {
@@ -243,7 +245,7 @@ to get the desired effect
                     }
                 }
 
-                if($('#parent-category').val() == '') $('#parent-category').val('1');
+                if ($('#parent-category').val() == '') $('#parent-category').val('1');
 
                 $.ajax({
                     type: 'POST',
