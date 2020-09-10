@@ -14,5 +14,6 @@
   <link rel="stylesheet" href="http://localhost:8080/shopping_cart/admin/plugins/toastr/toastr.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="http://localhost:8080/shopping_cart/admin/dist/css/adminlte.min.css" />
+  <!-- <link rel="stylesheet" href="${pageContext.request.contextPath}/admin/dist/css/adminlte.min.css" /> -->
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
