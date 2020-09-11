@@ -84,7 +84,7 @@
                             window.location.replace('http://localhost:8080/shopping_cart/admin');
                         }
                         else{
-                            toastr.error('Error logging in user');
+                            toastr.error(data.authMsg);
                         }
                     },
                     error: function(data){

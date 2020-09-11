@@ -31,6 +31,7 @@ public class CategoryCreate extends HttpServlet {
         tx.begin();
         //if(!this.isNullOrEmpty(parent))
         Category parentCategory = session.load(Category.class, Integer.parseInt(parent));
+
         Category category = new Category();
         category.setName(name);
         category.setDescription(description);

@@ -217,7 +217,7 @@ to get the desired effect
             // Create new category
             $("#new-category-save").click(function (e) {
                 e.preventDefault();
-                createUpdateCategories('category_create', 'New category created',
+                createUpdateCategories('/admin/categories', 'New category created',
                     'Error creating new category.');
             });
 
@@ -255,14 +255,13 @@ to get the desired effect
                     success: function (data) {
                         if (data) {
                             form.trigger('reset');
-                            toastr.success(successMsg);
+                            toastr.success(data.msg);
                         } else {
-                            toastr.error(errorMsg)
+                            toastr.error(data.msg)
                         }
                     },
                     error: function (data) {
-                        console.log('Error:' + data);
-                        toastr.error('Error: ' + errorMsg);
+                        toastr.error('Error: Failed to send request');
                     }
                 });
             }

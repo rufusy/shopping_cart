@@ -1,11 +1,13 @@
 package models;
 
+import javax.enterprise.inject.Model;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.Date;
 
+@Model
 @Embeddable
 public class Common {
     @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 1")
