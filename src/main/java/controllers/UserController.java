@@ -20,8 +20,8 @@ import java.util.List;
 @WebServlet(urlPatterns = {"/admin/users"})
 public class UserController extends HttpServlet {
 
-    //@EJB
-    private UserBean userBean = new UserBean();
+    @EJB
+    private UserBean userBean;
 
     /**
      * Get users or user by id
@@ -50,7 +50,7 @@ public class UserController extends HttpServlet {
        else{
            User user = new User();
            try{
-               user = this.userBean.show(Integer.parseInt(id));
+               user = this.userBean.show(id);
                msg = "User fetched successfully";
            }catch(Exception ex){
                msg = ex.getMessage();
@@ -74,32 +74,32 @@ public class UserController extends HttpServlet {
         String msg = "";
         boolean created = false;
 
-        User user = this.userBean.mapRequestParams(this.getRequestParams(request));
+//        User user = null; //= this.userBean.mapRequestParams(this.getRequestParams(request));
 //        try{
 //            user = this.userBean.mapRequestParams(this.getRequestParams(request));
 //        }catch (Exception ex){
 //            ex.printStackTrace();
 //        }finally {
-            ObjectMapper mapper = new ObjectMapper();
-            String data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(user);
-            response.getWriter().println(data);
-        //}
-
-//        try{
-//            this.userBean.create(this.getRequestParams(request));
-//            msg = "User created successfully";
-//            created = true;
-//        }catch (Exception ex) {
-//            ex.printStackTrace();
-//            msg = ex.getMessage();
-//        }finally {
 //            ObjectMapper mapper = new ObjectMapper();
-//            ObjectNode jsonNodes = mapper.createObjectNode();
-//            jsonNodes.put("msg",msg);
-//            jsonNodes.put("created", created);
-//            String data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNodes);
+//            String data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(user);
 //            response.getWriter().println(data);
 //        }
+
+        try{
+            this.userBean.create(this.getRequestParams(request));
+            msg = "User created successfully";
+            created = true;
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            msg = ex.getMessage();
+        }finally {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode jsonNodes = mapper.createObjectNode();
+            jsonNodes.put("msg",msg);
+            jsonNodes.put("created", created);
+            String data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNodes);
+            response.getWriter().println(data);
+        }
     }
 
     /**
@@ -139,10 +139,7 @@ public class UserController extends HttpServlet {
         String msg = "";
         boolean deleted = false;
         try{
-            if(StringUtils.isBlank(id))
-                throw new Exception("Invalid user id");
-
-            this.userBean.delete(Integer.parseInt(id));
+            this.userBean.delete(id);
             msg = "User deleted successfully";
             deleted = true;
         }catch (Exception ex){

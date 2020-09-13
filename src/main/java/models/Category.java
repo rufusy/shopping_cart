@@ -9,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-@Model
 @Entity
 @Table(name="sc_categories")
 public class Category {
