@@ -19,7 +19,7 @@ public class HibernateHelper {
         Properties properties = new Properties();
         properties.setProperty(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
         properties.setProperty(Environment.URL, "jdbc:mysql://localhost:3306/shopping_cart?useSSL=false");
-        properties.setProperty(Environment.USER, "root");
+        properties.setProperty(Environment.USER, "rufusy");
         properties.setProperty(Environment.PASS, "password1234");
         properties.setProperty(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
         properties.setProperty(Environment.SHOW_SQL, "true");

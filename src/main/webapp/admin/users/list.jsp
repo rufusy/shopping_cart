@@ -210,11 +210,11 @@ to get the desired effect
         else{
             $.ajax({
             type: 'POST',
-            url: 'http://localhost:8080/shopping_cart/user_create',
+            url: 'http://localhost:8080/shopping_cart/admin/users',
             data: form.serialize(),
             dataType: 'json',
             success: function(data){
-                if(data){
+                if(data.created){
                     form.trigger('reset'); 
                     console.log('New user created.')
                     toastr.success('New user created.');

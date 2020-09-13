@@ -2,9 +2,8 @@ package controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import ejb.UserBean;
+import ejb.AuthenticationBean;
 import models.User;
-import org.apache.commons.beanutils.BeanUtils;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -19,7 +18,7 @@ import java.io.IOException;
 public class LoginController extends HttpServlet {
 
     @EJB
-    private UserBean userBean;
+    private AuthenticationBean authBean;
 
     /**
      *
@@ -65,9 +64,7 @@ public class LoginController extends HttpServlet {
 
         User user = new User();
         try{
-            user = this.userBean.authenticate(email, password);
-//            BeanUtils.populate(user, request.getParameterMap());
-//            user = this.userBean.authenticate(user);
+            user = this.authBean.authenticate(email, password);
             authenticationMsg = "Login successful";
         }catch (Exception ex){
             ex.printStackTrace();

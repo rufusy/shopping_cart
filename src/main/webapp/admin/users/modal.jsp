@@ -10,6 +10,9 @@
             <div class="modal-body">
                 <form role="form" id="new-user-form"> 
                     <div class="card-body">
+
+                        <input type="text" value="" class="form-control" name="id" id=id >
+
                         <div class="form-group">
                             <label for="first-name">First name</label>
                             <input type="text" class="form-control" name="first-name" id="first-name" placeholder="First name">
