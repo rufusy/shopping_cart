@@ -85,9 +85,6 @@ public class Person {
 
     public Date getDateAdded() {
         return dateAdded;
-//        SimpleDateFormat sm = new SimpleDateFormat("MM-dd-yyyy");
-//        String strDate = sm.format(dateAdded);
-//        return
     }
 
     public void setDateAdded(Date dateAdded) {

@@ -20,7 +20,7 @@ public class User {
     @Column(columnDefinition = "VARCHAR(255)")
     private String image;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="user_group_id", nullable = false, referencedColumnName = "user_group_id")
     @JsonBackReference
     private UserGroup userGroup;

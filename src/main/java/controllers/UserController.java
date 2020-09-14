@@ -1,8 +1,10 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import dto.user.ListUserDto;
+import dto.user.SingleUserDto;
+import dto.user.UserDto;
 import ejb.UserBean;
 import models.User;
 import org.apache.commons.lang3.StringUtils;
@@ -13,10 +15,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @WebServlet(urlPatterns = {"/admin/users"})
 public class UserController extends HttpServlet {
@@ -40,36 +42,22 @@ public class UserController extends HttpServlet {
         ObjectNode jsonNodes = mapper.createObjectNode();
 
         if(StringUtils.isBlank(id)){
-            List<User> users;
-            ObjectNode usersNode = mapper.createObjectNode();
+            List<User> users = null;
             try{
                 users = this.userBean.list();
-                usersNode.put("usersFound", true);
-//                ObjectNode usersDetailsNode = usersNode.putObject("users");
-
-                ObjectNode usersDetailsNode = mapper.createObjectNode();
-                ArrayNode usersArrayNode = mapper.createArrayNode();
-                for(User user : users){
-                    usersDetailsNode.put("firstName", user.getPerson().getFirstName());
-                    usersDetailsNode.put("lastName", user.getPerson().getLastName());
-                    usersDetailsNode.put("email", user.getPerson().getEmail());
-                    usersDetailsNode.put("telephone", user.getPerson().getTelephone());
-                    usersArrayNode.add(usersDetailsNode);
-                }
-
            }catch(Exception ex){
                 msg = ex.getMessage();
                 usersFound = false;
                 ex.printStackTrace();
            }
            finally {
-               if(!usersFound){
-                   jsonNodes.put("msg", msg);
-                   jsonNodes.put("usersFound", false);
-                   data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNodes);
-               }else {
-                   data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(usersNode);
-               }
+                if(!usersFound){
+                    jsonNodes.put("msg", msg);
+                    jsonNodes.put("usersFound", false);
+                    data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNodes);
+                }else
+                    data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this.buildUserListJson(users));
+
                response.getWriter().println(data);
            }
        }
@@ -88,16 +76,9 @@ public class UserController extends HttpServlet {
                    jsonNodes.put("userFound", false);
                    data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNodes);
                }
-               else {
-                   ObjectNode userNode = mapper.createObjectNode();
-                   userNode.put("userFound", true);
-                   ObjectNode userDetailsNode = userNode.putObject("user");
-                   userDetailsNode.put("firstName", user.getPerson().getFirstName());
-                   userDetailsNode.put("lastName", user.getPerson().getLastName());
-                   userDetailsNode.put("email", user.getPerson().getEmail());
-                   userDetailsNode.put("telephone", user.getPerson().getTelephone());
-                   data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(userNode);
-               }
+               else
+                   data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this.buildUserJson(user));
+
                response.getWriter().println(data);
            }
        }
@@ -198,5 +179,25 @@ public class UserController extends HttpServlet {
             userDetails.put(paramName, paramValue);
         }
         return userDetails;
+    }
+
+    /**
+     * build users list json
+     * @param users
+     * @return
+     */
+    public ListUserDto buildUserListJson(List<User> users){
+        return new ListUserDto(
+                users.stream().map(u -> new UserDto(u)).collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * build user json
+     * @param user
+     * @return
+     */
+    public SingleUserDto buildUserJson(User user){
+        return new SingleUserDto(new UserDto(user));
     }
 }
