@@ -51,7 +51,7 @@ public class UserBean {
             this.user.getPerson().setDateAdded(new Date());
             this.user.getPerson().setStatus(true);
             this.user.setUserGroup(this.em.getReference(UserGroup.class, groupId));
-            this.em.persist(this.user);
+            this.em.merge(this.user);
         }catch (EntityExistsException ex){
             throw new Exception("The entity user already exists");
         }catch(IllegalArgumentException ex){
@@ -92,7 +92,7 @@ public class UserBean {
         int groupId = Integer.parseInt(userDetails.get("user-group"));
         String password = "secret"; //TODO read user input password
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        this.findById(id);
+        this.user = this.findById(id);
         try{
             this.user.getPerson().setFirstName(firstName);
             this.user.getPerson().setLastName(lastName);
@@ -115,8 +115,7 @@ public class UserBean {
      * @throws Exception
      */
     public User show(String id) throws Exception {
-        this.findById(id);
-        return this.user;
+        return this.findById(id);
     }
 
     /**
@@ -125,9 +124,8 @@ public class UserBean {
      * @throws Exception
      */
     public void delete(String id) throws Exception{
-        this.findById(id);
         try {
-            this.em.remove(this.user);
+            this.em.remove(this.findById(id));
         }catch(TransactionalException ex){
             throw new Exception("There is no transaction for this entity manager");
         }
@@ -139,21 +137,16 @@ public class UserBean {
      * @return
      * @throws Exception
      */
-    public void findById(String id) throws Exception{
-        int userId = 0;
-        if(StringUtils.isBlank(id))
-            throw new Exception("Invalid user id");
-        else
-            userId = Integer.parseInt(id);
-
-        if(userId == 0)
+    public User findById(String id) throws Exception{
+        if(StringUtils.isBlank(id) || StringUtils.equalsIgnoreCase(id, "0"))
             throw new Exception("Invalid user id");
 
         try{
-            this.user = this.em.find(User.class, userId);
-
-            if(this.user.getId() == 0)
+            User user = this.em.find(User.class, Integer.parseInt(id));
+            if(user == null)
                 throw new Exception("User not found");
+            else
+                return user;
 
         }catch (IllegalArgumentException ex){
             throw new Exception("Provide a valid user entity or primary key");

@@ -1,6 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import ejb.UserBean;
 import models.User;
@@ -32,33 +33,71 @@ public class UserController extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String id = request.getParameter("id");
         String msg="";
+        String data = "";
+        boolean userFound = true;
+        boolean usersFound = true;
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode jsonNodes = mapper.createObjectNode();
+
         if(StringUtils.isBlank(id)){
-            List<User> users = new ArrayList<>();
+            List<User> users;
+            ObjectNode usersNode = mapper.createObjectNode();
             try{
                 users = this.userBean.list();
-                msg = "Users fetched successfully";
+                usersNode.put("usersFound", true);
+//                ObjectNode usersDetailsNode = usersNode.putObject("users");
+
+                ObjectNode usersDetailsNode = mapper.createObjectNode();
+                ArrayNode usersArrayNode = mapper.createArrayNode();
+                for(User user : users){
+                    usersDetailsNode.put("firstName", user.getPerson().getFirstName());
+                    usersDetailsNode.put("lastName", user.getPerson().getLastName());
+                    usersDetailsNode.put("email", user.getPerson().getEmail());
+                    usersDetailsNode.put("telephone", user.getPerson().getTelephone());
+                    usersArrayNode.add(usersDetailsNode);
+                }
+
            }catch(Exception ex){
                 msg = ex.getMessage();
+                usersFound = false;
                 ex.printStackTrace();
            }
            finally {
-               ObjectMapper mapper = new ObjectMapper();
-               String data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(users);
+               if(!usersFound){
+                   jsonNodes.put("msg", msg);
+                   jsonNodes.put("usersFound", false);
+                   data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNodes);
+               }else {
+                   data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(usersNode);
+               }
                response.getWriter().println(data);
            }
        }
        else{
-           User user = new User();
-           try{
+            User user = new User();
+            try{
                user = this.userBean.show(id);
-               msg = "User fetched successfully";
            }catch(Exception ex){
                msg = ex.getMessage();
+               userFound = false;
                ex.printStackTrace();
            }
            finally {
-               ObjectMapper mapper = new ObjectMapper();
-               String data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(user);
+               if(!userFound) {
+                   jsonNodes.put("msg", msg);
+                   jsonNodes.put("userFound", false);
+                   data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNodes);
+               }
+               else {
+                   ObjectNode userNode = mapper.createObjectNode();
+                   userNode.put("userFound", true);
+                   ObjectNode userDetailsNode = userNode.putObject("user");
+                   userDetailsNode.put("firstName", user.getPerson().getFirstName());
+                   userDetailsNode.put("lastName", user.getPerson().getLastName());
+                   userDetailsNode.put("email", user.getPerson().getEmail());
+                   userDetailsNode.put("telephone", user.getPerson().getTelephone());
+                   data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(userNode);
+               }
                response.getWriter().println(data);
            }
        }
@@ -72,23 +111,12 @@ public class UserController extends HttpServlet {
      */
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
         String msg = "";
-        boolean created = false;
-
-//        User user = null; //= this.userBean.mapRequestParams(this.getRequestParams(request));
-//        try{
-//            user = this.userBean.mapRequestParams(this.getRequestParams(request));
-//        }catch (Exception ex){
-//            ex.printStackTrace();
-//        }finally {
-//            ObjectMapper mapper = new ObjectMapper();
-//            String data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(user);
-//            response.getWriter().println(data);
-//        }
+        boolean userCreated = false;
 
         try{
             this.userBean.create(this.getRequestParams(request));
             msg = "User created successfully";
-            created = true;
+            userCreated = true;
         }catch (Exception ex) {
             ex.printStackTrace();
             msg = ex.getMessage();
@@ -96,7 +124,7 @@ public class UserController extends HttpServlet {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode jsonNodes = mapper.createObjectNode();
             jsonNodes.put("msg",msg);
-            jsonNodes.put("created", created);
+            jsonNodes.put("userCreated", userCreated);
             String data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNodes);
             response.getWriter().println(data);
         }
@@ -110,11 +138,11 @@ public class UserController extends HttpServlet {
      */
     public void doPut(HttpServletRequest request, HttpServletResponse response) throws  IOException{
         String msg = "";
-        boolean updated = false;
+        boolean userUpdated = false;
         try{
             this.userBean.update(this.getRequestParams(request));
             msg = "User Updated successfully";
-            updated = true;
+            userUpdated = true;
         }catch (Exception ex){
             ex.printStackTrace();
             msg = ex.getMessage();
@@ -122,7 +150,7 @@ public class UserController extends HttpServlet {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode jsonNodes = mapper.createObjectNode();
             jsonNodes.put("msg",msg);
-            jsonNodes.put("updated", updated);
+            jsonNodes.put("userUpdated", userUpdated);
             String data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNodes);
             response.getWriter().println(data);
         }
@@ -137,11 +165,11 @@ public class UserController extends HttpServlet {
     public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException{
         String id = request.getParameter("id");
         String msg = "";
-        boolean deleted = false;
+        boolean userDeleted = false;
         try{
             this.userBean.delete(id);
             msg = "User deleted successfully";
-            deleted = true;
+            userDeleted = true;
         }catch (Exception ex){
             msg = ex.getMessage();
             ex.printStackTrace();
@@ -149,7 +177,7 @@ public class UserController extends HttpServlet {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode jsonNodes = mapper.createObjectNode();
             jsonNodes.put("msg",msg);
-            jsonNodes.put("deleted", deleted);
+            jsonNodes.put("userDeleted", userDeleted);
             String data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNodes);
             response.getWriter().println(data);
         }
