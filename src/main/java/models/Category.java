@@ -46,13 +46,14 @@ public class Category {
     @JoinColumn(name="parent_id", referencedColumnName = "category_id")
     private Category parentCategory;
 
-    @OneToMany(mappedBy="parentCategory", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToMany(fetch = FetchType.EAGER, mappedBy="parentCategory", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JsonManagedReference
     private List<Category> childCategories = new ArrayList<Category>();
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "categories", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JsonManagedReference
     private List<Product> products = new ArrayList<Product>();
+
 
     public int getId() {
         return id;
@@ -132,5 +133,12 @@ public class Category {
 
     public void setChildCategories(List<Category> childCategories) {
         this.childCategories = childCategories;
+    }
+
+    public String getParentName(){
+        if(this.getParentCategory() != null)
+            return this.getParentCategory().getName();
+        else
+            return "";
     }
 }

@@ -25,7 +25,6 @@ public class User {
     @JsonBackReference
     private UserGroup userGroup;
 
-
     public int getId() {
         return id;
     }
