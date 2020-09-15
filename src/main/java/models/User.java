@@ -25,6 +25,7 @@ public class User {
     @JsonBackReference
     private UserGroup userGroup;
 
+
     public int getId() {
         return id;
     }
@@ -56,4 +57,5 @@ public class User {
     public void setUserGroup(UserGroup userGroup) {
         this.userGroup = userGroup;
     }
+
 }

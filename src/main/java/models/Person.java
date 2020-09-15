@@ -91,4 +91,15 @@ public class Person {
         this.dateAdded = dateAdded;
     }
 
+    public String personStatus(){
+        return (this.isStatus()) ? "Active" : "Inactive";
+    }
+
+    public String userCreationDate(){
+        String pattern = "dd MMMM yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        String prettyDateAdded = simpleDateFormat.format(this.getDateAdded());
+        return  prettyDateAdded;
+    }
+
 }

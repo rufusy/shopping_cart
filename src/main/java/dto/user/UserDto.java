@@ -2,9 +2,6 @@ package dto.user;
 
 import models.User;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class UserDto {
     private final String id;
     private final String firstName;
@@ -12,9 +9,9 @@ public class UserDto {
     private final String email;
     private final String telephone;
     private final String image;
-    private final String status;
-    private final Date dateAdded;
     private final String group;
+    private final String status;
+    private final String creationDate;
 
     public UserDto(User user){
         this.id = String.valueOf(user.getId());
@@ -23,9 +20,9 @@ public class UserDto {
         this.email = user.getPerson().getEmail();
         this.telephone = user.getPerson().getTelephone();
         this.image = user.getImage();
-        this.status = (user.getPerson().isStatus()) ? "Active" : "Inactive";
-        this.dateAdded = user.getPerson().getDateAdded();
         this.group = user.getUserGroup().getName();
+        this.creationDate = user.getPerson().userCreationDate();
+        this.status = user.getPerson().personStatus();
     }
 
     public String getId() {
@@ -52,18 +49,16 @@ public class UserDto {
         return image;
     }
 
+    public String getGroup() {
+        return group;
+    }
+
     public String getStatus() {
         return status;
     }
 
-    public String getDateAdded(){
-        String pattern = "dd MMMM yyyy";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        String prettyDateAdded = simpleDateFormat.format(this.dateAdded);
-        return  prettyDateAdded;
+    public String getCreationDate() {
+        return creationDate;
     }
 
-    public String getGroup() {
-        return group;
-    }
 }
