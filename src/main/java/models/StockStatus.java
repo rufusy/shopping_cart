@@ -1,5 +1,7 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -17,7 +19,10 @@ public class StockStatus {
     @Column(nullable = false, columnDefinition = "VARCHAR(32)")
     private String name;
 
-    @OneToMany(mappedBy = "stockStatus", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JsonManagedReference
+    @OneToMany(mappedBy = "stockStatus",
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<Product> productList = new ArrayList<Product>();
 
     public int getId() {
