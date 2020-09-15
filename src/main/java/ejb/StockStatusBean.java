@@ -15,7 +15,7 @@ import java.util.List;
 
 @Stateless
 @Remote
-public class StockBean {
+public class StockStatusBean {
     @PersistenceContext
     private EntityManager em;
 
@@ -30,6 +30,7 @@ public class StockBean {
         String name = stockDetails.get("name");
         try {
             this.stockStatus.setName(name);
+            this.stockStatus.setDeleted(false);
             this.em.merge(this.stockStatus);
         }
         catch (EntityExistsException ex){
@@ -69,9 +70,9 @@ public class StockBean {
      * @throws Exception
      */
     public List<StockStatus> list() throws Exception{
-        String hql = "SELECT S FROM StockStatus S";
+        String hql = "SELECT S FROM StockStatus S WHERE deleted = :deleted";
         try{
-            return this.em.createQuery(hql).getResultList();
+            return this.em.createQuery(hql).setParameter("deleted", false).getResultList();
         }catch (IllegalArgumentException ex){
             throw new Exception("Invalid query");
         }catch (NoResultException ex){
@@ -97,7 +98,9 @@ public class StockBean {
      */
     public void delete(String id) throws Exception{
         try {
-            this.em.remove(this.findById(id));
+            this.stockStatus = this.findById(id);
+            this.stockStatus.setDeleted(true);
+            this.em.merge(this.stockStatus);
         }catch (TransactionalException ex){
             throw new Exception("There is no transaction for this entity manager");
         }

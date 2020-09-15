@@ -15,9 +15,11 @@ public class StockStatus {
     @Column(name="stock_status_id")
     private int id;
 
-    @NotNull
     @Column(nullable = false, columnDefinition = "VARCHAR(32)")
     private String name;
+
+    @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
+    private boolean deleted;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "stockStatus",
@@ -47,5 +49,13 @@ public class StockStatus {
 
     public void setProductList(List<Product> productList) {
         this.productList = productList;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }
