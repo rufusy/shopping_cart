@@ -1,5 +1,8 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -55,7 +58,7 @@ public class Product {
 
     @NotNull
     @Column(nullable = false, columnDefinition = "INT(4) DEFAULT 0")
-    private String quantity;
+    private int quantity;
 
     @NotNull
     @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 1")
@@ -63,7 +66,7 @@ public class Product {
 
     @NotNull
     @Column(nullable = false, columnDefinition = "DECIMAL(15,2) DEFAULT 0.00")
-    private boolean price;
+    private double price;
 
     @Column(name="date_available", columnDefinition = "DATE")
     @Temporal(value = TemporalType.DATE)
@@ -91,22 +94,27 @@ public class Product {
     private int minimum;
 
     @NotNull
+    @JsonBackReference
     @ManyToOne()
     @JoinColumn(name="stock_status_id", nullable = false, referencedColumnName = "stock_status_id")
     private StockStatus stockStatus;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<Review>();
 
     @Embedded
     private Common common;
 
+    @JsonManagedReference
     @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private ProductDiscount productDiscount;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductImage> images = new ArrayList<ProductImage>();
 
+    @JsonManagedReference
     @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private ProductSpecial productSpecial;
 
@@ -222,11 +230,11 @@ public class Product {
         this.metaKeyword = metaKeyword;
     }
 
-    public String getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
@@ -238,11 +246,11 @@ public class Product {
         this.shipping = shipping;
     }
 
-    public boolean isPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(boolean price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
