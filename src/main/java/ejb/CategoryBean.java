@@ -7,10 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
+import javax.persistence.*;
 import javax.transaction.TransactionalException;
 import java.util.Date;
 import java.util.HashMap;
@@ -47,6 +44,7 @@ public class CategoryBean {
             this.category.getCommon().setStatus(true);
             this.category.getCommon().setDateAdded(new Date());
             this.category.getCommon().setDateModified(new Date());
+            this.category.getCommon().setDeleted(false);
             this.category.setParentCategory(this.em.getReference(Category.class, parentId));
             this.em.merge(this.category);
         }catch (EntityExistsException ex){
@@ -55,6 +53,8 @@ public class CategoryBean {
             throw new Exception("The instance category is not an entity");
         }catch(TransactionalException ex){
             throw new Exception("There is no transaction for this entity manager");
+        }catch (EntityNotFoundException ex){
+            throw new Exception("Parent category not found");
         }
     }
 
@@ -64,9 +64,12 @@ public class CategoryBean {
      * @throws Exception
      */
     public List<Category> list() throws Exception{
-        String hql = "SELECT U FROM Category U";
+        String hql = "SELECT C FROM Category C WHERE C.common.status = :status AND C.common.deleted = :deleted";
         try{
-            return this.em.createQuery(hql).getResultList();
+            return this.em.createQuery(hql)
+                    .setParameter("status", true)
+                    .setParameter("deleted", false)
+                    .getResultList();
         }catch (IllegalArgumentException ex){
             throw new Exception("Invalid query");
         }catch (NoResultException ex){
@@ -87,6 +90,7 @@ public class CategoryBean {
         String metakeyword = categoryDetails.get("metakeyword");
         String metadescription = categoryDetails.get("metadescription");
         int parentId = Integer.parseInt(categoryDetails.get("parent-category"));
+        String status = categoryDetails.get("status");
         this.category = this.findById(id);
         try{
             this.category.setName(name);
@@ -98,11 +102,18 @@ public class CategoryBean {
             this.category.getCommon().setStatus(true);
             this.category.getCommon().setDateModified(new Date());
             this.category.setParentCategory(this.em.getReference(Category.class, parentId));
+            if(StringUtils.equalsIgnoreCase(status, "active"))
+                this.category.getCommon().setStatus(true);
+            if(StringUtils.equalsIgnoreCase(status, "inactive"))
+                this.category.getCommon().setStatus(false);
+
             this.em.merge(this.category);
         }catch(IllegalArgumentException ex){
             throw new Exception("Entity category is not an instance or is removed");
         }catch(TransactionalException ex) {
             throw new Exception("There is no transaction for this entity manager");
+        }catch (EntityNotFoundException ex){
+            throw new Exception("Parent category not found");
         }
     }
 
@@ -124,11 +135,12 @@ public class CategoryBean {
     public void delete(String id) throws Exception{
         try {
             Category parent = this.findById(id);
-            for(Category child : parent.getChildCategories()){
-                child.setParentCategory(null);
-                this.em.merge(child);
-            }
-            this.em.remove(parent);
+//            for(Category child : parent.getChildCategories()){
+//                child.setParentCategory(null);
+//                this.em.merge(child);
+//            }
+            parent.getCommon().setDeleted(true);
+            this.em.merge(parent);
         }catch (TransactionalException ex){
             throw new Exception("There is no transaction for this entity manager");
         }

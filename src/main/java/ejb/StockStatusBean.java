@@ -30,6 +30,7 @@ public class StockStatusBean {
         String name = stockDetails.get("name");
         try {
             this.stockStatus.setName(name);
+            this.stockStatus.setStatus(true);
             this.stockStatus.setDeleted(false);
             this.em.merge(this.stockStatus);
         }
@@ -42,7 +43,6 @@ public class StockStatusBean {
         }
     }
 
-
     /**
      * update stock status by id
      * @param stockDetails
@@ -51,9 +51,15 @@ public class StockStatusBean {
     public void update(HashMap<String, String> stockDetails) throws Exception{
         String id = stockDetails.get("id");
         String name = stockDetails.get("name");
+        String status = stockDetails.get("status");
         this.stockStatus = this.findById(id);
         try {
             this.stockStatus.setName(name);
+            if(StringUtils.equalsIgnoreCase(status, "active"))
+                this.stockStatus.setStatus(true);
+            if(StringUtils.equalsIgnoreCase(status, "inactive"))
+                this.stockStatus.setStatus(false);
+
             this.em.merge(this.stockStatus);
         }
         catch(IllegalArgumentException ex){
@@ -70,9 +76,12 @@ public class StockStatusBean {
      * @throws Exception
      */
     public List<StockStatus> list() throws Exception{
-        String hql = "SELECT S FROM StockStatus S WHERE deleted = :deleted";
+        String hql = "SELECT S FROM StockStatus S WHERE S.status = :status AND S.deleted = :deleted";
         try{
-            return this.em.createQuery(hql).setParameter("deleted", false).getResultList();
+            return this.em.createQuery(hql)
+                    .setParameter("status", true)
+                    .setParameter("deleted", false)
+                    .getResultList();
         }catch (IllegalArgumentException ex){
             throw new Exception("Invalid query");
         }catch (NoResultException ex){

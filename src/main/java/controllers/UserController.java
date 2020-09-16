@@ -6,6 +6,7 @@ import dto.user.ListUserDto;
 import dto.user.SingleUserDto;
 import dto.user.UserDto;
 import ejb.UserBean;
+import helpers.GetRequestParamsHelper;
 import models.User;
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@WebServlet(urlPatterns = {"/admin/users"})
+@WebServlet(urlPatterns = {"/users"})
 public class UserController extends HttpServlet {
 
     @EJB
@@ -45,6 +46,10 @@ public class UserController extends HttpServlet {
             List<User> users = null;
             try{
                 users = this.userBean.list();
+                if(users.isEmpty()){
+                    usersFound=false;
+                    msg="No users found";
+                }
            }catch(Exception ex){
                 msg = ex.getMessage();
                 usersFound = false;
@@ -95,7 +100,7 @@ public class UserController extends HttpServlet {
         boolean userCreated = false;
 
         try{
-            this.userBean.create(this.getRequestParams(request));
+            this.userBean.create(GetRequestParamsHelper.getRequestParams(request));
             msg = "User created successfully";
             userCreated = true;
         }catch (Exception ex) {
@@ -121,7 +126,7 @@ public class UserController extends HttpServlet {
         String msg = "";
         boolean userUpdated = false;
         try{
-            this.userBean.update(this.getRequestParams(request));
+            this.userBean.update(GetRequestParamsHelper.getRequestParams(request));
             msg = "User Updated successfully";
             userUpdated = true;
         }catch (Exception ex){
@@ -162,23 +167,6 @@ public class UserController extends HttpServlet {
             String data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNodes);
             response.getWriter().println(data);
         }
-    }
-
-    /**
-     * Get params from request
-     * @param request
-     * @return
-     */
-    private HashMap<String, String> getRequestParams(HttpServletRequest request){
-        HashMap<String, String> userDetails = new HashMap<>();
-        Enumeration en = request.getParameterNames();
-        while(en.hasMoreElements()){
-            Object obj = en.nextElement();
-            String paramName = (String)obj;
-            String paramValue = request.getParameter(paramName);
-            userDetails.put(paramName, paramValue);
-        }
-        return userDetails;
     }
 
     /**

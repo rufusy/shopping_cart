@@ -18,6 +18,9 @@ public class Common {
     @Temporal(value = TemporalType.TIMESTAMP)
     private java.util.Date dateModified;
 
+    @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
+    private boolean deleted;
+
     @Transient
     private final String datePattern = "dd MMMM yyyy";
 
@@ -43,6 +46,14 @@ public class Common {
 
     public void setDateModified(Date dateModified) {
         this.dateModified = dateModified;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public String status(){

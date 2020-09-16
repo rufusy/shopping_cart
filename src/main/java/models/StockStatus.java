@@ -18,6 +18,9 @@ public class StockStatus {
     @Column(nullable = false, columnDefinition = "VARCHAR(32)")
     private String name;
 
+    @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 1")
+    private boolean status;
+
     @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
     private boolean deleted;
 
@@ -49,6 +52,14 @@ public class StockStatus {
 
     public void setProductList(List<Product> productList) {
         this.productList = productList;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public boolean isDeleted() {

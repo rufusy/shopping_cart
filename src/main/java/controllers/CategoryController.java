@@ -6,10 +6,8 @@ import dto.category.CategoryDto;
 import dto.category.ListCategoryDto;
 import dto.category.SingleCategoryDto;
 import ejb.CategoryBean;
+import helpers.GetRequestParamsHelper;
 import models.Category;
-import models.Common;
-import models.User;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.ejb.EJB;
@@ -23,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@WebServlet(urlPatterns = {"/admin/categories"})
+@WebServlet(urlPatterns = {"/categories"})
 public class CategoryController extends HttpServlet {
 
     @EJB
@@ -47,6 +45,10 @@ public class CategoryController extends HttpServlet {
             List<Category> categories = null;
             try{
                 categories = this.categoryBean.list();
+                if(categories.isEmpty()){
+                    found = false;
+                    msg="Categories not found";
+                }
             }catch(Exception ex){
                 msg = ex.getMessage();
                 found = false;
@@ -97,7 +99,7 @@ public class CategoryController extends HttpServlet {
         boolean categoryCreated = false;
 
         try{
-            this.categoryBean.create(this.getRequestParams(request));
+            this.categoryBean.create(GetRequestParamsHelper.getRequestParams(request));
             msg = "Category created successfully";
             categoryCreated = true;
         }catch (Exception ex) {
@@ -123,7 +125,7 @@ public class CategoryController extends HttpServlet {
         String msg = "";
         boolean categoryUpdated = false;
         try{
-            this.categoryBean.update(this.getRequestParams(request));
+            this.categoryBean.update(GetRequestParamsHelper.getRequestParams(request));
             msg = "Category Updated successfully";
             categoryUpdated = true;
         }catch (Exception ex){
@@ -164,23 +166,6 @@ public class CategoryController extends HttpServlet {
             String data = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(categoryNode);
             response.getWriter().println(data);
         }
-    }
-
-    /**
-     * Get params from request
-     * @param request
-     * @return
-     */
-    private HashMap<String, String> getRequestParams(HttpServletRequest request){
-        HashMap<String, String> categoryDetails = new HashMap<>();
-        Enumeration en = request.getParameterNames();
-        while(en.hasMoreElements()){
-            Object obj = en.nextElement();
-            String paramName = (String)obj;
-            String paramValue = request.getParameter(paramName);
-            categoryDetails.put(paramName, paramValue);
-        }
-        return categoryDetails;
     }
 
     /**

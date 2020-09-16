@@ -2,10 +2,7 @@ package ejb;
 
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
+import javax.persistence.*;
 import javax.transaction.TransactionalException;
 
 import models.Person;
@@ -50,6 +47,7 @@ public class UserBean {
             this.user.getPerson().setPassword(hashedPassword);
             this.user.getPerson().setDateAdded(new Date());
             this.user.getPerson().setStatus(true);
+            this.user.getPerson().setDeleted(false);
             this.user.setUserGroup(this.em.getReference(UserGroup.class, groupId));
             this.em.merge(this.user);
         }catch (EntityExistsException ex){
@@ -58,6 +56,8 @@ public class UserBean {
             throw new Exception("The instance user is not an entity");
         }catch(TransactionalException ex){
             throw new Exception("There is no transaction for this entity manager");
+        }catch (EntityNotFoundException ex){
+            throw new Exception("User group not found");
         }
     }
 
@@ -67,9 +67,12 @@ public class UserBean {
      * @throws Exception
      */
     public List<User> list() throws Exception{
-        String hql = "SELECT U FROM User U";
+        String hql = "SELECT U FROM User U WHERE U.person.status = :status AND U.person.deleted = :deleted";
         try{
-            return this.em.createQuery(hql).getResultList();
+            return this.em.createQuery(hql)
+                    .setParameter("status", true)
+                    .setParameter("deleted", false)
+                    .getResultList();
         }catch(IllegalArgumentException ex){
             throw new Exception("Invalid query");
         }
@@ -90,6 +93,7 @@ public class UserBean {
         String email = userDetails.get("email");
         String telephone = userDetails.get("telephone");
         int groupId = Integer.parseInt(userDetails.get("user-group"));
+        String status = userDetails.get("status");
         String password = "secret"; //TODO read user input password
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
         this.user = this.findById(id);
@@ -100,11 +104,18 @@ public class UserBean {
             this.user.getPerson().setTelephone(telephone);
             this.user.getPerson().setPassword(hashedPassword);
             this.user.setUserGroup(this.em.find(UserGroup.class, groupId));
+            if(StringUtils.equalsIgnoreCase(status, "active"))
+                this.user.getPerson().setStatus(true);
+            if(StringUtils.equalsIgnoreCase(status, "inactive"))
+                this.user.getPerson().setStatus(false);
+
             this.em.merge(this.user);
         }catch(IllegalArgumentException ex){
             throw new Exception("Entity User is not an instance or is removed");
         }catch(TransactionalException ex) {
             throw new Exception("There is no transaction for this entity manager");
+        }catch (EntityNotFoundException ex){
+            throw new Exception("User group not found");
         }
     }
 
@@ -125,7 +136,9 @@ public class UserBean {
      */
     public void delete(String id) throws Exception{
         try {
-            this.em.remove(this.findById(id));
+            this.user = this.findById(id);
+            this.user.getPerson().setDeleted(true);
+            this.em.merge(this.user);
         }catch(TransactionalException ex){
             throw new Exception("There is no transaction for this entity manager");
         }

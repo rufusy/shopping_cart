@@ -35,6 +35,9 @@ public class Person {
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date dateAdded;
 
+    @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
+    private boolean deleted;
+
     public String getFirstName() {
         return firstName;
     }
@@ -89,6 +92,14 @@ public class Person {
 
     public void setDateAdded(Date dateAdded) {
         this.dateAdded = dateAdded;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public String personStatus(){
